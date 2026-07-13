@@ -134,14 +134,19 @@ if st.button("Generate PDF"):
             pdf.ln(5)
             return
 
-        max_width = 90   # ancho máximo de cada imagen
-        max_height = 120 # alto máximo de cada imagen
+        max_width = 85   # ancho máximo de cada imagen
+        max_height = 100 # alto máximo de cada imagen
         images_per_page = 2
         count = 0
 
         for path in paths:
             # Mostrar nombre del archivo
             pdf.cell(190, 8, txt=os.path.basename(path), ln=True)
+
+            # Verificar espacio disponible en la página
+            if pdf.get_y() + max_height > 270:  # límite inferior de la hoja
+                pdf.add_page()
+                section_header(title)
 
             # Insertar imagen con tamaño limitado
             pdf.image(path, w=max_width, h=max_height)
