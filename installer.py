@@ -128,31 +128,30 @@ if st.button("Generate PDF"):
     pdf.ln(5)
 
     def add_images(title, paths):
-    section_header(title)
-    if not paths:
-        pdf.cell(190, 8, txt="No files uploaded.", ln=True)
-        pdf.ln(5)
-        return
+        section_header(title)
+        if not paths:
+            pdf.cell(190, 8, txt="No files uploaded.", ln=True)
+            pdf.ln(5)
+            return
 
-    max_width = 90   # ancho máximo de cada imagen
-    max_height = 120 # alto máximo de cada imagen
-    images_per_page = 2
-    count = 0
+        max_width = 90   # ancho máximo de cada imagen
+        max_height = 120 # alto máximo de cada imagen
+        images_per_page = 2
+        count = 0
 
-    for path in paths:
-        # Mostrar nombre del archivo
-        pdf.cell(190, 8, txt=os.path.basename(path), ln=True)
+        for path in paths:
+            # Mostrar nombre del archivo
+            pdf.cell(190, 8, txt=os.path.basename(path), ln=True)
 
-        # Insertar imagen con tamaño limitado
-        pdf.image(path, w=max_width, h=max_height)
-        pdf.ln(10)
+            # Insertar imagen con tamaño limitado
+            pdf.image(path, w=max_width, h=max_height)
+            pdf.ln(10)
 
-        count += 1
-        # Cada 2 imágenes, agregar nueva página
-        if count % images_per_page == 0 and count < len(paths):
-            pdf.add_page()
-            section_header(title)
-
+            count += 1
+            # Cada 2 imágenes, agregar nueva página
+            if count % images_per_page == 0 and count < len(paths):
+                pdf.add_page()
+                section_header(title)
 
     add_images("Bank Information", bank_paths)
     add_images("ID Pictures", id_paths)
