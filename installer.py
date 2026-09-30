@@ -326,6 +326,30 @@ def add_images_stack(pdf: FPDF, title: str, images: list, max_w=LARGE_IMG_MAX_W,
     pdf.set_xy(left_margin, y)
 
 
+def _pdf_output_bytes(pdf: FPDF) -> bytes:
+    """Normalize FPDF.output() to bytes regardless of fpdf2 version/quirks.
+
+    fpdf2's .output() normally returns a bytearray, and bytes(...) on that
+    works fine. But if the wrong package ever ends up installed (the legacy
+    PyPI "fpdf" package, which is a different, unmaintained library that
+    also exposes an `FPDF` class under the same import name), .output()
+    returns a plain str instead — and bytes(some_str) with no encoding
+    raises "TypeError: string argument without an encoding" at exactly this
+    line. Handle both shapes defensively so a bad environment fails loudly
+    with a clear message instead of this cryptic TypeError.
+    """
+    out = pdf.output()
+    if isinstance(out, (bytes, bytearray)):
+        return bytes(out)
+    if isinstance(out, str):
+        return out.encode("latin-1", "replace")
+    raise TypeError(
+        f"Unexpected type from FPDF.output(): {type(out)!r}. This usually means "
+        "the wrong 'fpdf' package is installed (legacy 'fpdf' instead of 'fpdf2'). "
+        "Check requirements.txt pins 'fpdf2', not 'fpdf'."
+    )
+
+
 def build_installer_pdf(job: dict, installer: dict) -> bytes:
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
@@ -421,7 +445,7 @@ def build_installer_pdf(job: dict, installer: dict) -> bytes:
         else:
             add_images_grid(pdf, label, images)
 
-    return bytes(pdf.output())
+    return _pdf_output_bytes(pdf)
 
 
 # --------------------------------------------------------------------------
@@ -630,41 +654,49 @@ def main():
             )
             items = []
             for i in range(int(num_items)):
-                st.markdown(f"Item {i + 1}")
-                ic1, ic2, ic3, ic4, ic5 = st.columns([3, 2, 2, 1, 1.5])
-                with ic1:
-                    choice = st.selectbox(
-                        "Item Model",
-                        options=model_options + [NEW_MODEL_OPTION],
-                        key=f"model_{iid}_{i}",
-                        label_visibility="collapsed" if i else "visible",
+                # Build the expander's label from whatever was saved on the
+                # previous run (same trick as the live preview above), so a
+                # collapsed row still shows which model/qty it holds instead
+                # of a bare "Item N" — that's what makes collapsing useful
+                # once several items have been added.
+                row_preview = _row_preview(i)
+                if row_preview and row_preview["model_name"]:
+                    item_label = (
+                        f"Item {i + 1}: {row_preview['model_name']} "
+                        f"(x{int(row_preview['quantity'] or 0)}) — {money(row_preview['quantity'] * row_preview['incentive'])}"
                     )
-                    if choice == NEW_MODEL_OPTION:
-                        # Manual entry for every field when the model isn't in the catalog
-                        new_name = st.text_input("Model name", key=f"newmodel_{iid}_{i}", placeholder="Model name")
-                        new_incentive = st.number_input(
-                            "Incentive", min_value=0.0, step=0.01, key=f"newincentive_{iid}_{i}"
+                else:
+                    item_label = f"Item {i + 1}"
+
+                with st.expander(item_label, expanded=True, key=f"item_expander_{iid}_{i}"):
+                    ic1, ic2, ic3, ic4, ic5 = st.columns([3, 2, 2, 1, 1.5])
+                    with ic1:
+                        choice = st.selectbox(
+                            "Item Model",
+                            options=model_options + [NEW_MODEL_OPTION],
+                            key=f"model_{iid}_{i}",
                         )
-                        model_name, incentive = new_name, new_incentive
-                    else:
-                        model_name = choice
-                        incentive = catalog.get(choice, {}).get("price", 0.0)
-                        st.caption(f"Incentive: {money(incentive)}")
-                with ic2:
-                    serie_id_1 = st.text_input(
-                        "Serie ID 1", key=f"serie1_{iid}_{i}", label_visibility="collapsed" if i else "visible"
-                    )
-                with ic3:
-                    serie_id_2 = st.text_input(
-                        "Serie ID 2", key=f"serie2_{iid}_{i}", label_visibility="collapsed" if i else "visible"
-                    )
-                with ic4:
-                    quantity = st.number_input(
-                        "Quantity", min_value=0, value=1, key=f"qty_{iid}_{i}",
-                        label_visibility="collapsed" if i else "visible",
-                    )
-                with ic5:
-                    st.caption(f"Total: {money(quantity * incentive)}")
+                        if choice == NEW_MODEL_OPTION:
+                            # Manual entry for every field when the model isn't in the catalog
+                            new_name = st.text_input("Model name", key=f"newmodel_{iid}_{i}", placeholder="Model name")
+                            new_incentive = st.number_input(
+                                "Incentive", min_value=0.0, step=0.01, key=f"newincentive_{iid}_{i}"
+                            )
+                            model_name, incentive = new_name, new_incentive
+                        else:
+                            model_name = choice
+                            incentive = catalog.get(choice, {}).get("price", 0.0)
+                            st.caption(f"Incentive: {money(incentive)}")
+                    with ic2:
+                        serie_id_1 = st.text_input("Serie ID 1", key=f"serie1_{iid}_{i}")
+                    with ic3:
+                        serie_id_2 = st.text_input("Serie ID 2", key=f"serie2_{iid}_{i}")
+                    with ic4:
+                        quantity = st.number_input(
+                            "Quantity", min_value=0, value=1, key=f"qty_{iid}_{i}",
+                        )
+                    with ic5:
+                        st.caption(f"Total: {money(quantity * incentive)}")
 
                 items.append({
                     "model_name": model_name, "serie_id_1": serie_id_1, "serie_id_2": serie_id_2,
