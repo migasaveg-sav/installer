@@ -1,0 +1,134 @@
+{
+  "GWC-12CHARMO": {
+    "item_code": "MXR0010",
+    "price": 100.0
+  },
+  "GWC-18CHARMO": {
+    "item_code": "MXR0012",
+    "price": 150.0
+  },
+  "GWC-24CHARMO": {
+    "item_code": "MXR0014",
+    "price": 200.0
+  },
+  "GWC-36CHARMO": {
+    "item_code": "MXR0016",
+    "price": 340.0
+  },
+  "GWC12ATBXB-A3DNA1X": {
+    "item_code": "MXR0004",
+    "price": 120.0
+  },
+  "GWC24ATDXD-D3NNA1A": {
+    "item_code": "MXR0001",
+    "price": 200.0
+  },
+  "GWC36ATEXF-S3DNA1X": {
+    "item_code": "MXR0003",
+    "price": 360.0
+  },
+  "GWC36ATEXH-D3NNA1A": {
+    "item_code": "MXR0002",
+    "price": 340.0
+  },
+  "GWCB-12CHARMO": {
+    "item_code": "MXR0020",
+    "price": 120.0
+  },
+  "GWCB-12CHARMOBT": {
+    "item_code": "MXR0018",
+    "price": 120.0
+  },
+  "GWCB-12COSMO": {
+    "item_code": "MXR0026",
+    "price": 120.0
+  },
+  "GWCB-12COSMOBT": {
+    "item_code": "MXR0024",
+    "price": 120.0
+  },
+  "GWCB-18CHARMO": {
+    "item_code": "MXR0022",
+    "price": 160.0
+  },
+  "GWCB-18COSMO": {
+    "item_code": "MXR0028",
+    "price": 160.0
+  },
+  "GWCB-24COSMO": {
+    "item_code": "MXR0030",
+    "price": 220.0
+  },
+  "GWCB-36COSMO": {
+    "item_code": "MXR0032",
+    "price": 360.0
+  },
+  "GWH-12CHARMO": {
+    "item_code": "MXR0011",
+    "price": 100.0
+  },
+  "GWH-18CHARMO": {
+    "item_code": "MXR0013",
+    "price": 150.0
+  },
+  "GWH-24CHARMO": {
+    "item_code": "MXR0015",
+    "price": 200.0
+  },
+  "GWH-36CHARMO": {
+    "item_code": "MXR0017",
+    "price": 340.0
+  },
+  "GWH12ATBXA-D3DNA1X": {
+    "item_code": "MXR0007",
+    "price": 120.0
+  },
+  "GWH12ATBXB-A3DNA1X": {
+    "item_code": "MXR0006",
+    "price": 120.0
+  },
+  "GWH24ATDXD-D3NNA1A": {
+    "item_code": "MXR0005",
+    "price": 200.0
+  },
+  "GWH24ATDXE-S3DNA1X": {
+    "item_code": "MXR0008",
+    "price": 220.0
+  },
+  "GWH36ATEXH-D3DNA1X": {
+    "item_code": "MXR0009",
+    "price": 360.0
+  },
+  "GWHB-12CHARMO": {
+    "item_code": "MXR0021",
+    "price": 120.0
+  },
+  "GWHB-12CHARMOBT": {
+    "item_code": "MXR0019",
+    "price": 120.0
+  },
+  "GWHB-12COSMO": {
+    "item_code": "MXR0027",
+    "price": 120.0
+  },
+  "GWHB-12COSMOBT": {
+    "item_code": "MXR0025",
+    "price": 120.0
+  },
+  "GWHB-18CHARMO": {
+    "item_code": "MXR0023",
+    "price": 160.0
+  },
+  "GWHB-18COSMO": {
+    "item_code": "MXR0029",
+    "price": 160.0
+  },
+  "GWHB-24COSMO": {
+    "item_code": "MXR0031",
+    "price": 220.0
+  },
+  "GWHB-36COSMO": {
+    "item_code": "MXR0033",
+    "price": 360.0
+  }
+}
